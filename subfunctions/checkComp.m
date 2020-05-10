@@ -14,7 +14,7 @@
 % If the bit sequence is not compatible, extra random bits will be added to
 % the bit sequence array to make it compatible. 
 
-function [y, groupSz, modRes] = checkComp(bits, const)
+function [y, groupSz] = checkComp(bits, const)
 
 groupSz = log2(length(const));
 modRes = mod(length(bits), groupSz);
