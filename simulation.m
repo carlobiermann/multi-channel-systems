@@ -76,7 +76,7 @@ title('Noisy Rayleigh Rx signal');
 
 % Normalized Rx signal
 pConst = quadMean(const);
-normRx = setMeanPower(raySigNoiseRx, pConst)'; % why transpose?
+normRx = setMeanPower(raySigNoiseRx, pConst); 
 subplot(1,2,2)
 scatter(real(normRx), imag(normRx));
 title('Normalized Rx signal');
@@ -86,6 +86,8 @@ subplot(1,2,1);
 scatter(real(normRx), imag(normRx));
 title('before decisions');
 
+% calculate hard decisions of shortest distances between received signal
+% and constellation array to create array of 'received' modulation signs
 decisions = decision(normRx, const);
 subplot(1,2,2);
 scatter(real(decisions), imag(decisions));

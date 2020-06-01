@@ -8,7 +8,7 @@ function y = setSNR(signal, snrDb, M)
     
     nVec = randn(1,length(signal)) + 1i*randn(1,length(signal));
 
-    nVec = setMeanPower(nVec, pNoise)'; % is that right?
+    nVec = setMeanPower(nVec, pNoise); % is that right?
     
     y = signal + nVec;
 end
