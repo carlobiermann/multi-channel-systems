@@ -1,5 +1,5 @@
 function y = quadMean(x)
 
-    y = mean(x.^2);
+    y = mean(abs(x).^2);
     
 end

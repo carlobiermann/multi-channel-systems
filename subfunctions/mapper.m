@@ -17,7 +17,9 @@ function y = mapper(bits, const)
 [newBits, groupSz] = checkComp(bits, const); % check if sequence and bit group size are compatible
 groupedBits = reshape(newBits,groupSz,[])'; % divide bit sequence by bit group size -> reshape/transpose into matrix
 szGrBits = size(groupedBits,1); % get # of resulting bit groups (# of rows) out of groupedBits-matrix
+
 modArr = zeros(1, szGrBits); % initialize a zeros array for modulation signs
+
          
         for i = 1:szGrBits % loop through rows of groupedBits-matrix        
             bitStr = num2str(groupedBits(i,:)); % get row content and convert into string value
@@ -27,5 +29,6 @@ modArr = zeros(1, szGrBits); % initialize a zeros array for modulation signs
         end
         
 y = modArr;
+
 
 end
