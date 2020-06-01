@@ -3,13 +3,14 @@
 function y = setMeanPower(signal, Power)
 % check if Power is real number  && > 0
 % check if Power of signal >0 
-pZero = mean(abs(signal).^2);
+pZero = quadMean(signal);
 
     if pZero == 0
         disp('The signal has a mean Power of 0.'); 
     else
         alpha = sqrt(Power/pZero);
         y = signal.*alpha;
+        y = y';  % why?
     end
 
 end

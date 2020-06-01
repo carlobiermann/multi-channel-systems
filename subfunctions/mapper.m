@@ -17,15 +17,15 @@ function y = mapper(bits, const)
 [newBits, groupSz] = checkComp(bits, const); % check if sequence and bit group size are compatible
 groupedBits = reshape(newBits,groupSz,[])'; % divide bit sequence by bit group size -> reshape/transpose into matrix
 szGrBits = size(groupedBits,1); % get # of resulting bit groups (# of rows) out of groupedBits-matrix
-modVec = zeros(1, szGrBits); % initialize are zeros array for modulation signs
+modArr = zeros(1, szGrBits); % initialize are zeros array for modulation signs
          
         for i = 1:szGrBits % loop through rows of groupedBits-matrix        
             bitStr = num2str(groupedBits(i,:)); % get row content and convert into string value
             decInt = bin2dec(bitStr); % convert resulting binary string value into decimal value
             modIndex = decInt+1; % make decimal value an index for constellation array of modulation signs
-            modVec(1,i) = const(1,modIndex); % assign corresponding modulation sign value to modVec array                                                  
+            modArr(1,i) = const(1,modIndex); % assign corresponding modulation sign value to modArr - array                                                  
         end
         
-y = modVec;
+y = modArr;
         
 end
