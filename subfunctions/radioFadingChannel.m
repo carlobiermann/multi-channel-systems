@@ -3,7 +3,7 @@
 
 function y = radioFadingChannel(nSample)
 
-h = randn(nSample,1) + 1i*randn(nSample,1);
+h = randn(1, nSample) + 1i*randn(1, nSample);
 
 y = setMeanPower(h, 1);
 

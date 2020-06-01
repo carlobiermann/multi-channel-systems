@@ -10,7 +10,6 @@ pZero = quadMean(signal);
     else
         alpha = sqrt(Power/pZero);
         y = signal.*alpha;
-        y = y';  % why?
     end
 
 end
