@@ -60,7 +60,7 @@ scatter(real(raySig), imag(raySig));
 title('Mapped bits multplied with Rayleigh channel coefficients');
 
 % add Noise to the Rayleigh Channel
-raySigNoise = setSNR(raySig, 20, length(const));
+raySigNoise = setSNR(raySig, 30, length(const));
 subplot(1,2,2);
 scatter(real(raySigNoise), imag(raySigNoise));
 title('Noisy Rayleigh Channel');
@@ -70,7 +70,7 @@ title('Noisy Rayleigh Channel');
 % Rx stands for 'receive'
 raySigNoiseRx = raySigNoise ./ rayCoeffs;
 figure(4);
-subplot(1,2,1)
+subplot(1,2,1);
 scatter(real(raySigNoiseRx), imag(raySigNoiseRx));
 title('Noisy Rayleigh Rx signal');
 
@@ -80,3 +80,13 @@ normRx = setMeanPower(raySigNoiseRx, pConst)'; % why transpose?
 subplot(1,2,2)
 scatter(real(normRx), imag(normRx));
 title('Normalized Rx signal');
+
+figure(5);
+subplot(1,2,1);
+scatter(real(normRx), imag(normRx));
+title('before decisions');
+
+decisions = decision(normRx, const);
+subplot(1,2,2);
+scatter(real(decisions), imag(decisions));
+title('After decisions');
