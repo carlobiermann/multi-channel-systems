@@ -6,89 +6,136 @@ addpath('subfunctions');
 % global simulation parameters 
 const = [-1-1j, 1-1j, -1+1j, 1+1j]; % BPSK with Gray Code
 
-% create bit sequence
-bits = generateBits(10000);
-figure(1);
-subplot(1,2,1);
-plot(bits);
-title('Randomly generated bit sequence');
+SNR = 1:30;
+BERperSNR = zeros(1, length(SNR));
 
-% map the bit sequence to an array of corresponding modulation signs
-mappedBits = mapper(bits,const);
-subplot(1,2,2);
-scatter(real(mappedBits), imag(mappedBits));
-title('Mapped bits');
+nBitsPerLoop = 10e3; % simulate nBitsPerLoop
+nMinErr = 100; % simulate at least nMinErr bit errors 
+nMaxBits = 100 * nBitsPerLoop;
 
-% generate normally distributed random complex Rayleigh Channel
-% coefficients
-rayCoeffs = radioFadingChannel(length(mappedBits));
-realRC = real(rayCoeffs); 
-imagRC = imag(rayCoeffs);
-figure(2);
-subplot(2,2,1);
-scatter(realRC, imagRC);
-title('Normally distributed random complex Rayleigh channel coefficients');
+% initialize for SNR loop
+bitsTotal = []; 
+bitRxTotal = []; 
+nErrTotal = 0;
+nBitsTotal = 0;
 
-% plot Amplitude values of Rayleigh Coefficients in histogram
-rayAmpl = abs(rayCoeffs);
-subplot(2,2,2);
-histogram(rayAmpl);
-title('Amplitude Rayleigh Coefficients in histogram');
 
-% plot Amplitude values of Rayleigh Coefficients 
-pdfRay = 2.*rayAmpl.*exp(-rayAmpl.^2);
-subplot(2,2,3);
-scatter(rayAmpl, pdfRay);
-title('Amplitude Rayleigh Coefficients');
-xlabel('Amplitude(R)');
-ylabel('PDF(p_R(R))');
+%% SIMULATION LOOP
 
-% plot phase values of Rayleigh Coefficients
-rayAngle = angle(rayCoeffs);
-pdfRayAngle = 2.*rayAngle.*exp(-rayAngle.^2);
-subplot(2,2,4);
-scatter(rayAngle, pdfRayAngle); % is this right?
-title('Phase \Phi Rayleigh Coefficients');
-xlabel('Phase(\Phi)');
-ylabel('PDF(p_{\Phi}(\Phi))');
+for i = SNR
+    while(nErrTotal < nMinErr) || (nBitsTotal == nMaxBits) 
+        % TRANSMITTER
+        bits = generateBits(nBitsPerLoop);
+        mappedBits = mapper(bits,const);
 
-% multiply the mapped bits with Rayleigh Channel coefficients
-raySig = mappedBits .* rayCoeffs;
-figure(3);
-subplot(1,2,1);
-scatter(real(raySig), imag(raySig));
-title('Mapped bits multplied with Rayleigh channel coefficients');
+        % RADIO CHANNEL
+        radioCoeffs = radioFadingChannel(length(mappedBits));
+        radioSig = mappedBits .* radioCoeffs;
 
-% add Noise to the Rayleigh Channel
-raySigNoise = setSNR(raySig, 30, length(const));
-subplot(1,2,2);
-scatter(real(raySigNoise), imag(raySigNoise));
-title('Noisy Rayleigh Channel');
+        snrBlin = db2lin(i); % calculate SNR/Symbol in dB out of SNR (which is the SNR/Bit in dB)
+        snrSlin = snrBlin * log2(length(const));
+        snrSdb = lin2db(snrSlin);
 
-% Divide Noisy Rayleigh Signal by Channel Coefficients to simulate 'ideal'
-% transmission
-% Rx stands for 'receive'
-raySigNoiseRx = raySigNoise ./ rayCoeffs;
-figure(4);
-subplot(1,2,1);
-scatter(real(raySigNoiseRx), imag(raySigNoiseRx));
-title('Noisy Rayleigh Rx signal');
+        radioSigNoise = setSNR(radioSig, snrSdb); % add Gaussian Noise
 
-% Normalized Rx signal
-pConst = quadMean(const);
-normRx = setMeanPower(raySigNoiseRx, pConst); 
-subplot(1,2,2)
-scatter(real(normRx), imag(normRx));
-title('Normalized Rx signal');
+        % RECEIVER
+        raySigNoiseRx = radioSigNoise ./ radioCoeffs;
 
-figure(5);
-subplot(1,2,1);
-scatter(real(normRx), imag(normRx));
-title('before decisions');
+        pConst = quadMean(const); 
+        normRx = setMeanPower(raySigNoiseRx, pConst); % Normalized Rx signal
 
-% calculate hard decisions of shortest distances between received signal
-% and constellation array to create array of 'received' modulation signs
-decisions = decision(normRx, const);
-subplot(1,2,2);
-scatter(real(decisions), imag(decisions));
-title('After decisions');
+        decisions = decision(normRx, const);
+        bitRx = demapper(decisions, const);
+
+        bitsTotal = logical([bitsTotal, bits]); 
+        bitRxTotal = logical([bitRxTotal, bitRx]);
+        nBitsTotal = length(bitsTotal);
+
+        [nErrTotal, idx, ber] = countErrors(bitRxTotal, bitsTotal);
+        BERperSNR(1,i) = ber; 
+    end
+
+% RESET for next SNR iteration     
+bitsTotal = []; 
+bitRxTotal = []; 
+nErrTotal = 0;
+nBitsTotal = 0;
+
+% BER PLOT
+scatter(SNR, BERperSNR);
+title('BER for multiple SNRs of a single Rayleigh Channel');
+xlabel('SNR/dB');
+ylabel('BER');
+set(gca, 'YScale', 'log');
+ylim([10^-6 10^-1]);
+grid on;
+box on;
+end
+
+%% PLOTS
+
+% figure(1);
+% subplot(1,2,1);
+% plot(bits);
+% title('Randomly generated bit sequence');
+% 
+% subplot(1,2,2);
+% scatter(real(mappedBits), imag(mappedBits));
+% title('Mapped bits');
+% 
+% realRC = real(rayCoeffs); 
+% imagRC = imag(rayCoeffs);
+% figure(2);
+% subplot(2,2,1);
+% scatter(realRC, imagRC);
+% title('Normally distributed random complex Rayleigh channel coefficients');
+% 
+% % plot Amplitude values of Rayleigh Coefficients in histogram
+% rayAmpl = abs(rayCoeffs);
+% subplot(2,2,2);
+% histogram(rayAmpl);
+% title('Amplitude Rayleigh Coefficients in histogram');
+% 
+% % plot Amplitude values of Rayleigh Coefficients 
+% pdfRay = 2.*rayAmpl.*exp(-rayAmpl.^2);
+% subplot(2,2,3);
+% scatter(rayAmpl, pdfRay);
+% title('Amplitude Rayleigh Coefficients');
+% xlabel('Amplitude(R)');
+% ylabel('PDF(p_R(R))');
+% 
+% % plot phase values of Rayleigh Coefficients
+% rayAngle = angle(rayCoeffs);
+% pdfRayAngle = 2.*rayAngle.*exp(-rayAngle.^2);
+% subplot(2,2,4);
+% scatter(rayAngle, pdfRayAngle); % is this right?
+% title('Phase \Phi Rayleigh Coefficients');
+% xlabel('Phase(\Phi)');
+% ylabel('PDF(p_{\Phi}(\Phi))');
+% 
+% figure(3);
+% subplot(1,2,1);
+% scatter(real(raySig), imag(raySig));
+% title('Mapped bits multplied with Rayleigh channel coefficients');
+% 
+% subplot(1,2,2);
+% scatter(real(raySigNoise), imag(raySigNoise));
+% title('Noisy Rayleigh Channel');
+% 
+% figure(4);
+% subplot(1,2,1);
+% scatter(real(raySigNoiseRx), imag(raySigNoiseRx));
+% title('Noisy Rayleigh Rx signal');
+% 
+% subplot(1,2,2)
+% scatter(real(normRx), imag(normRx));
+% title('Normalized Rx signal');
+% 
+% figure(5);
+% subplot(1,2,1);
+% scatter(real(normRx), imag(normRx));
+% title('before decisions');
+% 
+% subplot(1,2,2);
+% scatter(real(decisions), imag(decisions));
+% title('After decisions');
