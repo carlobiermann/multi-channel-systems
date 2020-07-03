@@ -1,15 +1,18 @@
 function y = setSNR(signal, snrDb)
 
-    snrSlin = db2lin(snrDb);
+[r,c] = size(signal);
+y = zeros(r,c);
+snrSlin = db2lin(snrDb); % snr for every single antenna
 
-    
-    pSignal = quadMean(signal);
-    pNoise = pSignal/snrSlin; 
-    
-
-    nVec = randn(1,length(signal)) + 1i*randn(1,length(signal));
+for j = 1:r
+    pSignal = quadMean(signal(j,:));
+    pNoise = pSignal/snrSlin;     
+    nVec = randn(1,length(signal(j,:))) + 1i*randn(1,length(signal(j,:)));
 
     nVec = setMeanPower(nVec, pNoise); 
     
-    y = signal + nVec;
+    y(j,:) = signal(j,:) + nVec;
+    
+end    
+    
 end

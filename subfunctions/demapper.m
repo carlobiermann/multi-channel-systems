@@ -20,6 +20,7 @@ decValArr = zeros(1, szX); %iniate decimal value array
         decValArr(1,i) = bitVal; % bit values are stored as decimal value array
     end
 
+% [2] SEE REFERENCES IN README-DOC   
 bitRx = logical(reshape(dec2bin(decValArr,2).'-'0',1,[])); % change dec2bin to be compatible w diff length of const
 y = bitRx;
 end

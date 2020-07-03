@@ -1,5 +1,6 @@
 % This function scales a 'signal' with mean power of 'pZero' to a desired 'Power'
 
+% [3] SEE REFERENCES IN README-DOC
 function y = setMeanPower(signal, Power)
 % check if Power is real number  && > 0
 % check if Power of signal >0 
