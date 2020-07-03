@@ -24,10 +24,10 @@ nBitsTotal = 0;
 %%%% 1.1 SIMULATION PARAMETERS FOR RICE-CHANNEL SIMULATION WITHOUT ANTENNA
 %%%% DIVERSITY
 
-K = [1, 2, 5,10];
-Nr = 1;
-BERperSNR = zeros(length(K), length(SNR));
-BERperSNRtheor = BERperSNR;
+% K = [1, 2, 5,10];
+% Nr = 1;
+% BERperSNR = zeros(length(K), length(SNR));
+% BERperSNRtheor = BERperSNR;
 
 %-------------------------------------------------------------------------%
 %%%% 1.3 SIMULATION PARAMETERS FOR RAYLEIGH-CHANNEL SIMULATION WITH ANTENNA
@@ -44,19 +44,19 @@ BERperSNRtheor = BERperSNR;
 %%%% DIFFERENT ORDERS OF ANTENNA DIVERSITY (Nr) OVER 'MRC'- ANTENNA
 %%%% COMBINGING METHOD
 
-% % K = 0; % Rayleigh-Channel
+K = 0; % Rayleigh-Channel
 % K = 5; % Rice-Channel
-% Nr = [1, 2, 5 ,10];
-% combMethod = 'MRC';
-% BERperSNR = zeros(length(Nr), length(SNR));
-% BERperSNRtheor = BERperSNR;
+Nr = [1, 2, 5 ,10];
+combMethod = 'MRC';
+BERperSNR = zeros(length(Nr), length(SNR));
+BERperSNRtheor = BERperSNR;
 
 %-------------------------------------------------------------------------%
 %% SIMULATION LOOP %%
 
 for i = 1:length(SNR)
-   for j = 1:length(K) % 1.1
-%    for k = 1:length(Nr) % 1.2
+%    for j = 1:length(K) % 1.1
+   for k = 1:length(Nr) % 1.2
 %    for m = 1:length(combMethod) % 1.3   
         while (nErrTotal <= nMinErr)
             if nBitsTotal == nMaxBits, break, end 
@@ -65,13 +65,13 @@ for i = 1:length(SNR)
             mappedBits = mapper(bits,const);
 
             % RADIO CHANNEL
-            radioCoeffs = radioFadingChannel(length(mappedBits), K(j), Nr); % 1.1        
-%             radioCoeffs = radioFadingChannel(length(mappedBits), K, Nr(k)); % 1.2
+%             radioCoeffs = radioFadingChannel(length(mappedBits), K(j), Nr); % 1.1        
+            radioCoeffs = radioFadingChannel(length(mappedBits), K, Nr(k)); % 1.2
 %             radioCoeffs = radioFadingChannel(length(mappedBits), K, Nr); % 1.3
             radioSig = mappedBits .* radioCoeffs;
 
-            snrBlin = db2lin(SNR(i))/Nr; % 1.1/1.3           
-%             snrBlin = db2lin(SNR(i))/Nr(k); % 1.2
+%             snrBlin = db2lin(SNR(i))/Nr; % 1.1/1.3           
+            snrBlin = db2lin(SNR(i))/Nr(k); % 1.2
             snrSlin = snrBlin * log2(length(const));
             snrSdb = lin2db(snrSlin);
 
@@ -79,8 +79,8 @@ for i = 1:length(SNR)
 
             % RECEIVER
 %             radioSigNoiseRx = antennaCombining(radioSigNoise, radioCoeffs, combMethod(m)); % 1.3
-%             radioSigNoiseRx = antennaCombining(radioSigNoise, radioCoeffs, combMethod); % 1.2
-            radioSigNoiseRx = radioSigNoise ./ radioCoeffs; % 1.1
+            radioSigNoiseRx = antennaCombining(radioSigNoise, radioCoeffs, combMethod); % 1.2
+%             radioSigNoiseRx = radioSigNoise ./ radioCoeffs; % 1.1
 
             pConst = quadMean(const); 
             normRx = setMeanPower(radioSigNoiseRx, pConst); % Normalized Rx signal
@@ -94,19 +94,19 @@ for i = 1:length(SNR)
             nBitsTotal = length(bitsTotal);
 
             [nErrTotal, idx, ber] = countErrors(bitRxTotal, bitsTotal);
-            BERperSNR(j,i) = ber; % 1.1
-%             BERperSNR(k,i) = ber; % 1.2
+%             BERperSNR(j,i) = ber; % 1.1
+            BERperSNR(k,i) = ber; % 1.2
 %             BERperSNR(m,i) = ber; % 1.3  
             
             % theoretical errors  
             
             % [1] SEE REFERENCES IN README-DOC
-            funTheta = @(theta) ((1+K(j))*sin(theta).^2)/((1 + K(j))*sin(theta).^2 + snrBlin)*exp(-(K(j) * snrBlin)/((1+K(j)) * sin(theta).^2 + snrBlin)); %1.1 
-            integralTheta = (1/pi) * integral(@(theta) funTheta(theta), 0, 0.5*pi, 'ArrayValued', true); %1.1
-            BERperSNRtheor(j,i) = integralTheta; % 1.1
+%             funTheta = @(theta) ((1+K(j))*sin(theta).^2)/((1 + K(j))*sin(theta).^2 + snrBlin)*exp(-(K(j) * snrBlin)/((1+K(j)) * sin(theta).^2 + snrBlin)); %1.1 
+%             integralTheta = (1/pi) * integral(@(theta) funTheta(theta), 0, 0.5*pi, 'ArrayValued', true); %1.1
+%             BERperSNRtheor(j,i) = integralTheta; % 1.1
             
-%             berTheo = berfading(SNR(i), 'psk', length(const), Nr(k), K); %1.2
-%             BERperSNRtheor(k,i) = berTheo; %1.2
+            berTheo = berfading(SNR(i), 'psk', length(const), Nr(k), K); %1.2
+            BERperSNRtheor(k,i) = berTheo; %1.2
         end
     % RESET for next SNR iteration     
     bitsTotal = []; 
@@ -123,10 +123,10 @@ BERawgn = berawgn(SNR, 'psk',length(const), 'nondiff');
 scatter(SNR, BERperSNR(1,:), 'MarkerEdgeColor', 'green','MarkerFaceColor','green')
 
 %%%% TITLE FOR RICE-CHANNEL SIMULATION WITH DIFFERENT K-PARAMETERS
-title('BERs for Rice Channels with different K-factors') % 1.1
+% title('BERs for Rice Channels with different K-factors') % 1.1
 
 %%%% TITLE FOR ANTENNA DIVERSITY SIMULATION WITH DIFFERENT Nr-PARAMETERS
-% title('BERs for Rice/Rayleigh-Channels with varying Antenna-Diversity (Nr) and MRC-Combining') % 1.2
+title('BERs for Rice/Rayleigh-Channels with varying Antenna-Diversity (Nr) and MRC-Combining') % 1.2
 
 %%%% TITLE FOR ANTENNA-DIVERSITY SIMULATION WITH DIFFERENT ANTENNA-COMBINING METHODS
 % title('BERs for a Rayleigh-Channel with varying Antenna-Combining Methods (Nr=2)') % 1.3
@@ -152,10 +152,10 @@ plot(SNR, BERperSNRtheor(4,:), 'Color','blue')
 plot(SNR, BERawgn, 'Color', 'red');
 
 %%%% LEGEND FOR RICE-CHANNEL SIMULATION WITH DIFFERENT K-PARAMETERS
-legend('K=1 num.','K=2 num.','K=5 num.', 'K=10 num.','K=1 analy.', 'K=2 analy.', 'K=5 analy.', 'K=10 analy.', 'AWGN') % 1.1
+% legend('K=1 num.','K=2 num.','K=5 num.', 'K=10 num.','K=1 analy.', 'K=2 analy.', 'K=5 analy.', 'K=10 analy.', 'AWGN') % 1.1
 
 %%%% LEGEND FOR ANTENNA-DIVERSITY SIMULATION WITH DIFFERENT Nr-PARAMETERS
-% legend('Nr=1 num.','Nr=2 num.','Nr=5 num.', 'Nr=10 num.','Nr=1 analy.', 'Nr=2 analy.', 'Nr=5 analy.', 'Nr=10 analy.', 'AWGN') % 1.2
+legend('Nr=1 num.','Nr=2 num.','Nr=5 num.', 'Nr=10 num.','Nr=1 analy.', 'Nr=2 analy.', 'Nr=5 analy.', 'Nr=10 analy.', 'AWGN') % 1.2
 
 %%%% LEGEND FOR ANTENNA-DIVERSITY SIMULATION WITH DIFFERENT
 %%%% ANTENNA-COMBINING METHODS

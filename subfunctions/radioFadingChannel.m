@@ -1,18 +1,23 @@
-% This function returns the normalized complex coefficients of a Rayleigh
+% This function returns the normalized complex coefficients of a Rice
 % channel
 
-function y = radioFadingChannel(nSample, K)
+function y = radioFadingChannel(nSample, K, Nr)
 
-hNLOS = randn(1, nSample) + 1i*randn(1, nSample);
-hNLOS = setMeanPower(hNLOS,1);
-pNLOS = quadMean(hNLOS); 
+y = zeros(Nr, nSample);
 
-hLOS = 1 * exp(1i*2*pi*randn(1, nSample));
-pLOS = K * pNLOS; 
-hLOS = setMeanPower(hLOS, pLOS);
+for j = 1:Nr
+    hNLOS = randn(1, nSample) + 1i*randn(1, nSample);
+    hNLOS = setMeanPower(hNLOS,1);
+    pNLOS = quadMean(hNLOS); 
 
-h = hLOS + hNLOS;
+    hLOS = exp(1i * rand(1, nSample) * 2*pi); % uniformly distributed phases between 0 and 2pi
+    pLOS = K * pNLOS; 
+    hLOS = setMeanPower(hLOS, pLOS);
 
-y = setMeanPower(h, 1);
+    h = hLOS + hNLOS;
+
+    y(j,:) = setMeanPower(h, 1/Nr);
+    
+end
 
 end
