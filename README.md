@@ -17,7 +17,7 @@ Rice-channel without antenna diversity over varying K-factors.
 
 ### Simulation B - SIMO
 
-Rice-channel with a fixed K=5 over varying degrees of antenna diversity 
+Rice-channel with a fixed K=5 over varying degrees of antenna diversity.
  
 
 ### Simulation C - SIMO
