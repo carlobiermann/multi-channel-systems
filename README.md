@@ -13,7 +13,8 @@ The differented simulation types are the following:
 
 ### Simulation A - SISO
 
-Rice-channel without antenna diversity over varying K-factors.
+Rice-channel without antenna diversity over varying K-factors. 
+[PLOT A] (carlobiermann.github.com/carlobiermann/multi-channel-systems/PLOTS/PLOT1-RICE-CHANNEL-SIM.jpg)
 
 ### Simulation B - SIMO
 
