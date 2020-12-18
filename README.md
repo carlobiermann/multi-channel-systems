@@ -18,9 +18,13 @@ Rice-channel without antenna diversity over varying K-factors.
 
 ### Simulation B - SIMO
 
-Rice-channel with a fixed K=5 over varying degrees of antenna diversity.
+Rice-channel with a fixed K=5 over varying degrees of antenna diversity using the MRC-Method.
+![PLOT B](https://github.com/carlobiermann/multi-channel-systems/blob/master/PLOTS/PLOT2-RICE-CHANNEL-MRC-COMB.jpg)
  
+Rayleigh-channel (K=0) over varying degrees of antenna diversity using the MRC-Method.
+![PLOT C](https://github.com/carlobiermann/multi-channel-systems/blob/master/PLOTS/PLOT3-RAYLEIGH-CHANNEL-MRC-COMB.jpg)
 
 ### Simulation C - SIMO
 
 Rayleigh-channel (K=0) with fixed antenna diversity (Nr=2) over different antenna combining methods.
+![PLOT D](https://github.com/carlobiermann/multi-channel-systems/blob/master/PLOTS/PLOT4-RAYLEIGH-COMB-METHODS.jpg)
