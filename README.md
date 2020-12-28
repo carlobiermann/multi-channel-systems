@@ -19,7 +19,17 @@ bit error rate (BER) plotted over the SNRs.
 
 ## How to use
 
+1. `git clone ` this repository 
+2. Open one of the simulation `.m` files in your directory with MATLAB
+3. `Run` the file in MATLAB
+
+The simulation will take a couple of seconds to plot the results. 
+For better results change the `nBitsPerLoop` under the `% RANDOM BIT GENERATION PARAMETERS` to `10e3`.
+Keep in mind that this  will significantly increase the simulation time.
+
 ## Types of simulations
+
+
 
 ### Simulation A 
 
