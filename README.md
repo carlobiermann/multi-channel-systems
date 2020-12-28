@@ -11,11 +11,11 @@ bit error rate (BER) plotted over the SNRs.
 
 ## Table of Contents
 
-- [How to use](##hot%20to%20use)
-- [Types of simulations](##types%20of%20simulations)
-  * [Simultaion A](###simulation%20a)
-  * [Simulation B](###simulation%20b)
-  * [Simulation C](###simulation%20c)
+- [How to use](##hot-to-use)
+- [Types of simulations](##types-of-simulations)
+  * [Simultaion A](###simulation-a)
+  * [Simulation B](###simulation-b)
+  * [Simulation C](###simulation-c)
 
 ## How to use
 
