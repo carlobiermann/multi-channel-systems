@@ -9,14 +9,21 @@ over the two types of channel models and received with varying Signal-to-Noise-R
 The performance of these channels will then be evaluated by the received bit errors through the 
 bit error rate (BER) plotted over the SNRs.
 
-The differented simulation types are the following: 
+## Table of Contents
 
-### Simulation A - SISO
+- [How-to-use](##hot-to-use)
+  * [Simultaion-A](###simulation-a)
+  * [Simulation-B](###simulation-b)
+  * [Simulation-C](###simulation-c)
+
+## How to use
+
+### Simulation A 
 
 Rice-channel without antenna diversity over varying K-factors. 
 ![PLOT A](https://github.com/carlobiermann/multi-channel-systems/blob/master/PLOTS/PLOT1-RICE-CHANNEL-SIM.jpg)
 
-### Simulation B - SIMO
+### Simulation B 
 
 Rice-channel with a fixed K=5 over varying degrees of antenna diversity using the MRC-Method.
 ![PLOT B](https://github.com/carlobiermann/multi-channel-systems/blob/master/PLOTS/PLOT2-RICE-CHANNEL-MRC-COMB.jpg)
@@ -24,7 +31,7 @@ Rice-channel with a fixed K=5 over varying degrees of antenna diversity using th
 Rayleigh-channel (K=0) over varying degrees of antenna diversity using the MRC-Method.
 ![PLOT C](https://github.com/carlobiermann/multi-channel-systems/blob/master/PLOTS/PLOT3-RAYLEIGH-CHANNEL-MRC-COMB.jpg)
 
-### Simulation C - SIMO
+### Simulation C 
 
 Rayleigh-channel (K=0) with fixed antenna diversity (Nr=2) over different antenna combining methods.
 ![PLOT D](https://github.com/carlobiermann/multi-channel-systems/blob/master/PLOTS/PLOT4-RAYLEIGH-COMB-METHODS.jpg)
