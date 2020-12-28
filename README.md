@@ -41,7 +41,7 @@ The simulations are based on a simple radio communication model consisiting of a
 
 __SISO: Single Input Single Output__
 
-#### Rice-channel without antenna diversity over varying K-factors. 
+Rice-channel without antenna diversity over varying K-factors. 
 ![PLOT A](https://github.com/carlobiermann/multi-channel-systems/blob/master/PLOTS/PLOT1-RICE-CHANNEL-SIM.jpg)
 
 ### Simulation B 
