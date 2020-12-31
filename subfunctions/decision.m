@@ -10,8 +10,7 @@ decidedArr = zeros(1, szX);
 
     for i = 1:szX % loop through x
         for j = 1:szConst % loop through const
-            distances(1,j) = norm(x(1,i) - const(1,j)); % calculate euclidean distances between x(1,i) and each element
-                                                        % of the constellation array
+            distances(1,j) = norm(x(1,i) - const(1,j)); % calculate euclidean distances between x(1,i) and each element of the constellation array
                                                                                                                                                       
         end       
         [~, shortestInd] = min(distances); % get the index of the smallest value in distances array (i.e. shortest distance)

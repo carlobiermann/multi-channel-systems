@@ -4,9 +4,6 @@
 %  via [0 1]
 
 function y = generateBits(nBits)
-
     y = logical(randi([0 1],1,nBits)); % make nBit-long array of random logical values 
-    % stem(y); % plot y as discrete sequence
-
 end
 

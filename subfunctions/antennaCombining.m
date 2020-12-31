@@ -9,7 +9,7 @@ function y = antennaCombining(x, h, combMethod)
 switch combMethod 
     case 'sum'
         zT = ones(r,c);
-        combRx = sum(zT .* x ./ h, 1);
+        combRx = sum(zT .* x ./ h, 1); % sum all rows
         
     case 'MRC'
         zT = conj(h); 
@@ -20,9 +20,9 @@ switch combMethod
         combRx = sum(zT .* x, 1);
         
     case 'SDC'  
-        [~, ind] = max(abs(h), [], 1);
+        [~, ind] = max(abs(h), [], 1); % get index of longest vector in each column of h
         zT = zeros(r,c);
-        for j = 1:length(ind)
+        for j = 1:length(ind) 
             zT(ind(j),j) = 1;
         end
         combRx = sum(x .* zT ./ h, 1);
